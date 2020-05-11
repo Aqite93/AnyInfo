@@ -11,7 +11,7 @@ class NewsResponse {
     var totalResults: Int? = 0
 
     @SerializedName("articles")
-    var articles: Articles? = null
+    var articles: Array<Articles>? = null
 }
 
 class Articles {
