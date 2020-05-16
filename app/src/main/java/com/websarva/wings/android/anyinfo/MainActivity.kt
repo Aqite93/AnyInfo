@@ -4,6 +4,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.WindowManager
+import android.webkit.WebView
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +17,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var webView: WebView
     private var newsResponse: NewsResponse? = null
 
     companion object {
@@ -27,12 +31,25 @@ class MainActivity : AppCompatActivity() {
 
         val lvNews = findViewById<ListView>(R.id.lvNews)
 
+//        // If want to use webview, remove comment.
+//        // When click list item, moving to news site
+//        lvNews.setOnItemClickListener { parent, view, position, id ->
+//            val element = parent.getItemAtPosition(position) as MutableMap<String, String>
+//            Log.i("url: ", element["url"])
+//            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(element["url"] as String))
+//            startActivity(browserIntent)
+//        }
+
         // When click list item, moving to news site
         lvNews.setOnItemClickListener { parent, view, position, id ->
+            setContentView(R.layout.web);
+            webView = findViewById(R.id.web_view);
+
+            // enable javascript
+            webView.settings.javaScriptEnabled = true
+
             val element = parent.getItemAtPosition(position) as MutableMap<String, String>
-            Log.i("url: ", element["url"])
-            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(element["url"] as String))
-            startActivity(browserIntent)
+            webView.loadUrl(element["url"] as String)
         }
         getNewsHeadline()
     }
@@ -83,5 +100,16 @@ class MainActivity : AppCompatActivity() {
                 Log.i("failure getting news: ", t.message)
             }
         })
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        Log.i("KeyCode:", KeyEvent.KEYCODE_BACK.toString())
+        Log.i("KeyCode:", webView.canGoBack().toString())
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+            // 前のページに戻る
+            webView.goBack()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }
