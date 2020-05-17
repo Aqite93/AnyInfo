@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                             "title" to it.title,
                             "url" to it.url,
                             "description" to it.description,
-                            "published_at" to it.publishedAt
+                            "published_at" to toLocalDate(it.publishedAt).toString()
                         )
                         newsList.add(news)
                     }
@@ -120,5 +120,15 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onKeyDown(keyCode, event)
+    }
+
+    private fun toLocalDate(
+        date: String?,
+        dateFormat: String = "yyyy-MM-dd'T'HH:mm:ss'Z'",
+        timeZone: TimeZone = TimeZone.getTimeZone("JST")
+    ): Date {
+        val parser = SimpleDateFormat(dateFormat, Locale.getDefault())
+        parser.timeZone = timeZone
+        return parser.parse(date)
     }
 }
