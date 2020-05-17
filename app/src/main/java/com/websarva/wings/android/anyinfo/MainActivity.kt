@@ -1,11 +1,8 @@
 package com.websarva.wings.android.anyinfo
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.view.WindowManager
 import android.webkit.WebView
 import android.widget.ListView
 import android.widget.SimpleAdapter
@@ -15,10 +12,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
-    private var newsResponse: NewsResponse? = null
+    private lateinit var newsResponse: NewsResponse
 
     companion object {
         var BaseUrl = "http://newsapi.org/v2/top-headlines/"
@@ -77,18 +76,30 @@ class MainActivity : AppCompatActivity() {
                     val lvNews = findViewById<ListView>(R.id.lvNews)
                     val newsList: MutableList<MutableMap<String, String?>> = mutableListOf()
 
-                    newsResponse!!.articles?.forEach {
-                        val news = mutableMapOf("title" to it.title, "url" to it.url)
+                    newsResponse.articles?.forEach {
+                        val news = mutableMapOf(
+                            "image" to it.urlToImage,
+                            "title" to it.title,
+                            "url" to it.url,
+                            "description" to it.description,
+                            "published_at" to it.publishedAt
+                        )
                         newsList.add(news)
                     }
 
                     // set list view adapter
-                    val from = arrayOf("title", "url")
-                    val to = intArrayOf(android.R.id.text1, android.R.id.text2)
+                    val from = arrayOf("image", "title", "url", "description", "published_at")
+                    val to = intArrayOf(
+                        R.id.news_image,
+                        R.id.news_title,
+                        R.id.news_url,
+                        R.id.news_description,
+                        R.id.news_published_at
+                    )
                     val adapter = SimpleAdapter(
                         applicationContext,
                         newsList,
-                        android.R.layout.simple_list_item_2,
+                        R.layout.news_list,
                         from,
                         to
                     )
@@ -103,10 +114,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        Log.i("KeyCode:", KeyEvent.KEYCODE_BACK.toString())
-        Log.i("KeyCode:", webView.canGoBack().toString())
         if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
-            // 前のページに戻る
+            // back previous page
             webView.goBack()
             return true
         }

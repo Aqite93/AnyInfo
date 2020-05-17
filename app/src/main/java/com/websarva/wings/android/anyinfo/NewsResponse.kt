@@ -26,7 +26,7 @@ class Articles {
     @SerializedName("url")
     var url: String? = null
     @SerializedName("urlToImage")
-    var urlToImage: URL? = null
+    var urlToImage: String? = null
     @SerializedName("publishedAt")
     var publishedAt: String? = null
     @SerializedName("content")
