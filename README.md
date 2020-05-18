@@ -6,4 +6,3 @@
 ```NewsService.kt
 @Headers("x-api-key: <your api key>)
 ```
-
