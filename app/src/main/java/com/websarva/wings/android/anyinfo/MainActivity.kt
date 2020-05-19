@@ -14,6 +14,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
@@ -74,35 +75,20 @@ class MainActivity : AppCompatActivity() {
 
                     // create mutable data
                     val lvNews = findViewById<ListView>(R.id.lvNews)
-                    val newsList: MutableList<MutableMap<String, String?>> = mutableListOf()
+                    val newsList = arrayListOf<News>()
 
                     newsResponse.articles?.forEach {
-                        val news = mutableMapOf(
-                            "image" to it.urlToImage,
-                            "title" to it.title,
-                            "url" to it.url,
-                            "description" to it.description,
-                            "published_at" to toLocalDate(it.publishedAt).toString()
+                        var news = News(
+                            R.drawable.ichigo,
+                            it.title!!,
+                            it.url!!,
+                            it.description!!,
+                            it.publishedAt!!
                         )
                         newsList.add(news)
                     }
 
-                    // set list view adapter
-                    val from = arrayOf("image", "title", "url", "description", "published_at")
-                    val to = intArrayOf(
-                        R.id.news_image,
-                        R.id.news_title,
-                        R.id.news_url,
-                        R.id.news_description,
-                        R.id.news_published_at
-                    )
-                    val adapter = SimpleAdapter(
-                        applicationContext,
-                        newsList,
-                        R.layout.news_list,
-                        from,
-                        to
-                    )
+                    val adapter = NewsAdapter(applicationContext, newsList)
                     lvNews.adapter = adapter
                 }
             }
