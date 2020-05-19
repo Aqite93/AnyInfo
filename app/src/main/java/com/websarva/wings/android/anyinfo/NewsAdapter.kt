@@ -13,11 +13,11 @@ class NewsAdapter(var context: Context, var newsList: ArrayList<News>) : BaseAda
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = layoutInflater.inflate(R.layout.news_list, parent, false)
-        Picasso.get().load(newsList[position].image!!).into(view.news_image)
+        Picasso.get().load(newsList[position].urlToImage!!).into(view.news_image)
         view.news_title.text = newsList[position].title
-        view.news_url.text = newsList[position].urlToImage
+        view.news_url.text = newsList[position].url
         view.news_description.text = newsList[position].description
-        view.news_description.text = newsList[position].published_at
+        view.news_description.text = newsList[position].publishedAt
 
         return view
     }

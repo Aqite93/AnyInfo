@@ -5,16 +5,12 @@ import android.util.Log
 import android.view.KeyEvent
 import android.webkit.WebView
 import android.widget.ListView
-import android.widget.SimpleAdapter
 import androidx.appcompat.app.AppCompatActivity
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
@@ -48,8 +44,8 @@ class MainActivity : AppCompatActivity() {
             // enable javascript
             webView.settings.javaScriptEnabled = true
 
-            val element = parent.getItemAtPosition(position) as MutableMap<String, String>
-            webView.loadUrl(element["url"] as String)
+            val element = parent.getItemAtPosition(position) as News
+            webView.loadUrl(element.url as String)
         }
         getNewsHeadline()
     }
@@ -67,8 +63,8 @@ class MainActivity : AppCompatActivity() {
         val call = service.getNewsHeadlines(country)
 
         // call news api
-        call.enqueue(object : Callback<NewsResponse> {
-            override fun onResponse(call: Call<NewsResponse>, response: Response<NewsResponse>) {
+        call.enqueue(object : retrofit2.Callback<NewsResponse> {
+            override fun onResponse(call: retrofit2.Call<NewsResponse>, response: Response<NewsResponse>) {
                 if (response.code() == 200) {
                     newsResponse = response.body() as NewsResponse
                     Log.i("newsResponse: ", "get news response")
@@ -79,9 +75,9 @@ class MainActivity : AppCompatActivity() {
 
                     newsResponse.articles?.forEach {
                         var news = News(
-                            it.urlToImage!!,
                             it.title!!,
                             it.url!!,
+                            it.urlToImage!!,
                             it.description!!,
                             it.publishedAt!!
                         )
@@ -93,7 +89,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<NewsResponse>, t: Throwable) {
+            override fun onFailure(call: retrofit2.Call<NewsResponse>, t: Throwable) {
                 Log.i("failure getting news: ", t.message)
             }
         })

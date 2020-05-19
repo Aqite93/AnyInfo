@@ -1,17 +1,17 @@
 package com.websarva.wings.android.anyinfo
 
 class News {
-    var image: String? = null
     var title: String? = null
+    var url: String? = null
     var urlToImage: String? = null
     var description: String? = null
-    var published_at: String? = null
+    var publishedAt: String? = null
 
-    constructor(image: String, title: String, url: String, description: String, published_at: String){
-        this.image = image
+    constructor(title: String, url: String, urlToImage: String, description: String, published_at: String){
         this.title = title
-        this.urlToImage = url
+        this.url = url
+        this.urlToImage = urlToImage
         this.description = description
-        this.published_at = published_at
+        this.publishedAt = published_at
     }
 }
