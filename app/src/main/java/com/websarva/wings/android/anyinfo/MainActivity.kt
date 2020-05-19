@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
                     newsResponse.articles?.forEach {
                         var news = News(
-                            R.drawable.ichigo,
+                            it.urlToImage!!,
                             it.title!!,
                             it.url!!,
                             it.description!!,
