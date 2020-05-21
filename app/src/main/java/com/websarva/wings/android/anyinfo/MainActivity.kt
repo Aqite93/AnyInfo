@@ -64,7 +64,10 @@ class MainActivity : AppCompatActivity() {
 
         // call news api
         call.enqueue(object : retrofit2.Callback<NewsResponse> {
-            override fun onResponse(call: retrofit2.Call<NewsResponse>, response: Response<NewsResponse>) {
+            override fun onResponse(
+                call: retrofit2.Call<NewsResponse>,
+                response: Response<NewsResponse>
+            ) {
                 if (response.code() == 200) {
                     newsResponse = response.body() as NewsResponse
                     Log.i("newsResponse: ", "get news response")
